@@ -6,9 +6,9 @@ public class CollectibleObject : MonoBehaviour
 {
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player")   // Player Collect tuşu ile objeyi envantere alıyor.
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(GameManager.GetCollectKeyCode()))
             {
                 Debug.Log("Objeyi Aldın.");
                 AddInventory();
@@ -17,7 +17,7 @@ public class CollectibleObject : MonoBehaviour
         }
     }
 
-    protected virtual void AddInventory()
+    protected virtual void AddInventory() 
     {
         FindObjectOfType<GameManager>().AddInventoryItem(this);
     }

@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
-{ 
+{
+    //--- GAME STATES 
+    public enum GameState { INTRO, MAINMENU, LOADING, PLAYING, INVENTORY, READING_NEWSPAPER }
+
+    GameState gameState;
+    //--------------------------------------------------------------------------------------
 
     [Header("Controls")]
-
-    [SerializeField]
-    private KeyCode interactionKey;
-
-    [SerializeField]
-    private KeyCode CollectKey;
-
+    private static KeyCode interactionKeyCode = KeyCode.F;
+    private static KeyCode collectKeyCode = KeyCode.E;
+    private static KeyCode showKeysKeyCode = KeyCode.K;
+    private static KeyCode showInventoryKeyCode = KeyCode.I;
+    private static KeyCode showNewspapersKeyCode = KeyCode.G;
     //--------------------------------------------------------------------------------------
+
     [Header("Game Objects")]
 
     [SerializeField]
@@ -24,13 +28,10 @@ public class GameManager : MonoBehaviour
 
     private BatteryStatus batteryStatus;
 
-
-    // Start is called before the first frame update
     private void Start()
     {
         inventory = GetComponent<InventorySystem>();
         batteryStatus = character.GetComponent<BatteryStatus>();
-
     }
 
     public void AddInventoryItem(CollectibleObject collectibleObject)
@@ -55,16 +56,28 @@ public class GameManager : MonoBehaviour
         return inventory.GetCurrentKey();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(showKeysKeyCode))
         {
             inventory.ListKeys();
         }
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(showInventoryKeyCode))
         {
             inventory.ListMyObjects();
         }
     }
+
+    // Controls Get Methods 
+    public static KeyCode GetInteractionKeyCode()
+    {
+        return interactionKeyCode;
+    }
+
+    public static KeyCode GetCollectKeyCode()
+    {
+        return collectKeyCode;
+    }
+    // Controls Get Methods End
+
 }

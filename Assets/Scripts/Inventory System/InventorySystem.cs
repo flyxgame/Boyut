@@ -6,23 +6,24 @@ public class InventorySystem : MonoBehaviour
 {
     List<CollectibleObject> myObjects = new List<CollectibleObject>();
     List<Key> keys = new List<Key>();
+    List<Newspaper> newspapers = new List<Newspaper>();
 
     int currentKey;
 
     void Start()
     {
         LoadInventory();
-
     }
 
     private void LoadInventory()
     {
-        //player prefs events..
+        //son kaydedilen envanter bilgilerini yükleme işlemleri.
 
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        //Basic key change inputs
+        if (Input.GetKeyDown(KeyCode.Alpha1))   
         {
             ChangeKey(0);
         }
@@ -41,22 +42,36 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-    private void ChangeKey(int index)
+    private void ChangeKey(int index) // pil değiştirme
     {
         Debug.Log("Current Key:" + keys[index].GetKeyNo());
         currentKey = index;
     }
 
-    public void AddObject(CollectibleObject obj)
+    public void AddObject(CollectibleObject obj) // Gelen objeyi envantere ekleme.
     {
         myObjects.Add(obj);
     }
-    public void AddKey(Key key)
+
+    public void AddKey(Key key) //Anahtar listesine gelen anahtarı ekleme.
     {
         keys.Add(key);
     }
 
-    public void ListKeys()
+    public void AddNewspaper(Newspaper newspaper) // Gazete listesine gelen gazeteyi ekleme.
+    {
+        newspapers.Add(newspaper);
+    }
+
+    public void ListNewspapers() // Gazeteleri listeleme
+    {
+        foreach (var newspaper in newspapers)
+        {
+            Debug.Log(newspaper.name);
+        }
+    }
+
+    public void ListKeys() // Anahtarları Listele.
     {
         foreach (var key in keys)
         {
@@ -64,14 +79,15 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
-    public void ListMyObjects()
+    public void ListMyObjects() // Envanterdeki Objeleri Listele.
     {
         foreach (var key in myObjects)
         {
             Debug.Log(key);
         }
     }
-    public int GetCurrentKey()
+
+    public int GetCurrentKey() // Kullanılan anahtarın numarasını getir.
     {
         return keys[currentKey].GetKeyNo();
     }
