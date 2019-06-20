@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -21,8 +23,27 @@ public class GameManager : MonoBehaviour
     [Header("Game Objects")]
 
     [SerializeField]
-    private UnityStandardAssets.Characters.FirstPerson.FirstPersonController character;
+    private UnityStandardAssets.Characters.FirstPerson.FirstPersonController characterScript;
+
+    [SerializeField]
+    private GameObject player;
+
+    [SerializeField]
+    private Door[] doors;
+
+    [SerializeField]
+    private CollectibleObject[] inventoryObjects;
+
+    [SerializeField]
+    private Key[] keys;
+
+    [SerializeField]
+    private Newspaper[] newspapers;
+
     //--------------------------------------------------------------------------------------
+
+    [SerializeField]
+    private int saveTime = 300; //
 
     private InventorySystem inventory;
 
@@ -30,8 +51,14 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        InitializeVariables();
+        LoadGame();
+    }
+
+    private void InitializeVariables()
+    {
         inventory = GetComponent<InventorySystem>();
-        batteryStatus = character.GetComponent<BatteryStatus>();
+        batteryStatus = characterScript.GetComponent<BatteryStatus>();
     }
 
     public void AddInventoryItem(CollectibleObject collectibleObject)
@@ -51,13 +78,19 @@ public class GameManager : MonoBehaviour
         batteryStatus.AddBattery(value);
     }
 
-    public int GetCurrentKeyNo()
+    public int GetCurrentKeyNo() // mevcut anahtarı getir.
     {
         return inventory.GetCurrentKey();
     }
 
     void Update()
     {
+        CheckInputs();
+    }
+
+    void CheckInputs()
+    {
+        // Show inventory, newspapers and keys.
         if (Input.GetKeyDown(showKeysKeyCode))
         {
             inventory.ListKeys();
@@ -66,6 +99,67 @@ public class GameManager : MonoBehaviour
         {
             inventory.ListMyObjects();
         }
+        if (Input.GetKeyDown(showNewspapersKeyCode))
+        {
+            inventory.ListNewspapers();
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            SaveGame();
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            LoadGame();
+        }
+    }
+
+    // Save and Load 
+    public void SaveGame()
+    {
+        KeyData keyData = new KeyData(keys);
+        SaveSystem.SaveKeyData(keyData); //Key Data saving.
+
+        float[] playerPosition = { characterScript.transform.position.x, characterScript.transform.position.y, characterScript.transform.position.z };
+        float[] playerRotation = { characterScript.transform.rotation.eulerAngles.x, characterScript.transform.rotation.eulerAngles.y, characterScript.transform.rotation.eulerAngles.z };
+
+        PlayerData playerData = new PlayerData(playerPosition, playerRotation, batteryStatus.GetBatteryStatus()); // Player Data saving.
+
+        SaveSystem.SavePlayerData(playerData);
+    }
+
+    public void LoadGame()
+    {
+        KeyData keyData = SaveSystem.LoadKeyData();
+
+        PlayerData playerData = SaveSystem.LoadPlayerData();
+
+        for (int i = 0; i < keyData.keyNo.Length; i++)
+        {
+            keys[i].SetInInventory(keyData.inInventory[i]);
+            if (keyData.inInventory[i]) // envanterde olan anahtarların envantere yüklenmesi ve sahneden silinmesi işlemi.
+            {
+                Key key = new Key(keyData.keyNo[i], keyData.inInventory[i]);
+                inventory.AddKey(key);
+                keys[i].gameObject.SetActive(false); // destroy etmiyoruz sonradan ihtiyacımız olabilir.
+            }
+        }
+
+        //Batarya son durumunun yüklenmesi.
+        batteryStatus.SetBatteryStatus(playerData.batteryStatus);
+
+        //Karakterin son pozisyonunun ve rotasyonunun yüklenmesi.
+        Vector3 playerPos = new Vector3(playerData.position[0], playerData.position[1], playerData.position[2]);
+        Vector3 playerRot = new Vector3(playerData.rotation[0], playerData.rotation[1], playerData.rotation[2]);
+
+        player.GetComponent<CharacterController>().enabled = false;  // değişiklik yapabilmek için character controller'ı devre dışı bırakmamız gerekiyor.
+
+        player.transform.position = playerPos; //changing player position;
+
+        player.transform.rotation = Quaternion.Euler(playerRot); // Bir bug'dan ötürü rotate edilmiyor to do: MERT
+
+        player.GetComponent<CharacterController>().enabled = true; // tekrar controller'ı aktif hale getirdik.
+
+
     }
 
     // Controls Get Methods 

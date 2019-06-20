@@ -15,10 +15,10 @@ public class BatteryStatus : MonoBehaviour
 
     private bool isReducing = false; // pil azalması aktif deaktif 
 
-    
+
     private void Update()
     {
-        if (!isReducing && flashLightIsOn)
+        if (!isReducing && flashLightIsOn) // Azalma aktif ve fener açık ise bataryayı azalt.
         {
             StartCoroutine(ReduceBattery());
         }
@@ -39,7 +39,18 @@ public class BatteryStatus : MonoBehaviour
         batteryStatus = Mathf.Clamp(batteryStatus + value, 0, 100);
     }
 
-    public void OffFlashLight() // Feneri açma kapama fonksiyonları.
+    public float GetBatteryStatus() // Güncel batarya miktarını getir.
+    {
+        return batteryStatus;
+    }
+
+    public void SetBatteryStatus(float value) // Batarya miktarını değiştir.
+    {
+        batteryStatus = Mathf.Clamp(value, 0, 100);
+    }
+
+    // Feneri açma kapama fonksiyonları.
+    public void OffFlashLight()
     {
         flashLightIsOn = false;
     }

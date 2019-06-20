@@ -24,7 +24,7 @@ public class Door : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(GameManager.GetInteractionKeyCode()))
             {
                 OpenTheDoor();
             }

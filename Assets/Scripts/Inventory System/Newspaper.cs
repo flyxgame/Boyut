@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class Newspaper : CollectibleObject
 {
-    // --- Gazete Parçası hakkında bilgilerin yer aldığı değişkenler --- //
+    [SerializeField]
+    private string description;
 
-    [SerializeField] private string name;
-
-    public string GetName()
+    public string GetDescription()
     {
-        return name;
+        return description;
     }
 
     protected override void AddInventory()

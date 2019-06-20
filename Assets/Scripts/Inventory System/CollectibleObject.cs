@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class CollectibleObject : MonoBehaviour
 {
+    [SerializeField]
+    private string name;
+
+    public string GetName()
+    {
+        return name;
+    }
+
     private void OnTriggerStay(Collider other)
     {
         if (other.tag == "Player")   // Player Collect tuşu ile objeyi envantere alıyor.
@@ -17,7 +25,7 @@ public class CollectibleObject : MonoBehaviour
         }
     }
 
-    protected virtual void AddInventory() 
+    protected virtual void AddInventory()
     {
         FindObjectOfType<GameManager>().AddInventoryItem(this);
     }

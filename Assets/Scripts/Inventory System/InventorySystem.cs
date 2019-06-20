@@ -10,16 +10,6 @@ public class InventorySystem : MonoBehaviour
 
     int currentKey;
 
-    void Start()
-    {
-        LoadInventory();
-    }
-
-    private void LoadInventory()
-    {
-        //son kaydedilen envanter bilgilerini yükleme işlemleri.
-
-    }
     private void Update()
     {
         //Basic key change inputs
@@ -40,6 +30,7 @@ public class InventorySystem : MonoBehaviour
         {
             ChangeKey(3);
         }
+        
     }
 
     private void ChangeKey(int index) // pil değiştirme
@@ -90,5 +81,37 @@ public class InventorySystem : MonoBehaviour
     public int GetCurrentKey() // Kullanılan anahtarın numarasını getir.
     {
         return keys[currentKey].GetKeyNo();
+    }
+
+    // List SET GET Methods
+
+    public List<Key> GetKeyList()
+    {
+        return keys;
+    }
+    
+    public List<CollectibleObject> GetMyObjects()
+    {
+        return myObjects;
+    }
+
+    public List<Newspaper> GetNewspapers()
+    {
+        return newspapers;
+    }
+
+    public void SetKeyList(List<Key> keyList)
+    {
+        keys = keyList;
+    }
+    
+    public void SetMyObjectList(List<CollectibleObject> objectList)
+    {
+        myObjects = objectList;
+    }
+    
+    public void SetNewspaperList(List<Newspaper> newspaperList)
+    {
+        newspapers = newspaperList;
     }
 }
