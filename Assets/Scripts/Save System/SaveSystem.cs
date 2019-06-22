@@ -30,7 +30,12 @@ public static class SaveSystem
 
     public static void SaveNewspaperData(NewspaperData data)
     {
-
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/newspaperdata.save");
+        Debug.Log(Application.persistentDataPath);
+        bf.Serialize(file, data);
+        file.Close();
+        Debug.Log("Game saved.");
     }
 
     public static KeyData LoadKeyData()
@@ -53,7 +58,6 @@ public static class SaveSystem
         }
 
     }
-
     public static PlayerData LoadPlayerData()
     {
         if (File.Exists(Application.persistentDataPath + "/playerdata.save")) // daha önce kaydedilmiş mi
@@ -63,6 +67,26 @@ public static class SaveSystem
             PlayerData data = bf.Deserialize(file) as PlayerData;
             file.Close();
 
+            Debug.Log("Game Loaded");
+
+            return data;
+
+        }
+        else
+        {
+            Debug.Log("No game saved!");
+            return null;
+        }
+    }
+
+    public static NewspaperData LoadNewspaperData()
+    {
+        if (File.Exists(Application.persistentDataPath + "/newspaperdata.save")) // daha önce kaydedilmiş mi
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/newspaperdata.save", FileMode.Open);
+            NewspaperData data = bf.Deserialize(file) as NewspaperData;
+            file.Close();
             Debug.Log("Game Loaded");
 
             return data;

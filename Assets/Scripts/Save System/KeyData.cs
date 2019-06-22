@@ -26,7 +26,6 @@ public class KeyData
                 position[index, 0] = keyList[index].gameObject.transform.position.y;
                 position[index, 2] = keyList[index].gameObject.transform.position.z;
             }
-
         }
 
     }

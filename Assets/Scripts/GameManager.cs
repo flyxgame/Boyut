@@ -49,6 +49,8 @@ public class GameManager : MonoBehaviour
 
     private BatteryStatus batteryStatus;
 
+    private int i, j; // loop variables;
+
     private void Start()
     {
         InitializeVariables();
@@ -124,7 +126,11 @@ public class GameManager : MonoBehaviour
 
         PlayerData playerData = new PlayerData(playerPosition, playerRotation, batteryStatus.GetBatteryStatus()); // Player Data saving.
 
-        SaveSystem.SavePlayerData(playerData);
+        SaveSystem.SavePlayerData(playerData); //Player Data saving.
+
+        NewspaperData newspaperData = new NewspaperData(newspapers);
+
+        SaveSystem.SaveNewspaperData(newspaperData); //Newspaper Data saving.
     }
 
     public void LoadGame()
@@ -133,14 +139,27 @@ public class GameManager : MonoBehaviour
 
         PlayerData playerData = SaveSystem.LoadPlayerData();
 
-        for (int i = 0; i < keyData.keyNo.Length; i++)
+        NewspaperData newspaperData = SaveSystem.LoadNewspaperData();
+
+        for (i = 0; i < keyData.keyNo.Length; i++)
         {
             keys[i].SetInInventory(keyData.inInventory[i]);
-            if (keyData.inInventory[i]) // envanterde olan anahtarların envantere yüklenmesi ve sahneden silinmesi işlemi.
+            if (keyData.inInventory[i]) // envanterde olan anahtarların envantere yüklenmesi ve sahneden gizlenmesi
             {
-                Key key = new Key(keyData.keyNo[i], keyData.inInventory[i]);
-                inventory.AddKey(key);
+                Key key = new Key(keyData.keyNo[i], true);
+                inventory.AddKey(key); // envantere tekrar ekliyoruz.
                 keys[i].gameObject.SetActive(false); // destroy etmiyoruz sonradan ihtiyacımız olabilir.
+            }
+        }
+
+        for (i = 0; i < newspaperData.newspaperId.Length; i++)
+        {
+            newspapers[i].SetInInventory(newspaperData.inInventory[i]);
+            if (newspaperData.inInventory[i]) // envanterde olan newspaperlerin envantere yüklenmesi ve sahneden gizlenmesi
+            {
+                Newspaper newspaper = new Newspaper(newspapers[i].GetNewspaperId(), newspapers[i].GetDescription(), true);
+                inventory.AddNewspaper(newspaper); // envantere tekrar ekliyoruz.
+                newspapers[i].gameObject.SetActive(false); // sahneden gizliyoruz.
             }
         }
 

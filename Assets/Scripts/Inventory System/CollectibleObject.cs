@@ -29,4 +29,5 @@ public class CollectibleObject : MonoBehaviour
     {
         FindObjectOfType<GameManager>().AddInventoryItem(this);
     }
+
 }
