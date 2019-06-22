@@ -237,12 +237,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 116411115}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.30837268, y: 0.45702434, z: 0.30995408}
+  m_LocalScale: {x: 1.5813984, y: 1.5813984, z: 1.5813984}
   m_Children: []
-  m_Father: {fileID: 1833258107}
-  m_RootOrder: 0
+  m_Father: {fileID: 190279396}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &116411117
 AudioListener:
@@ -295,6 +295,34 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &190279395 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2181362184469511376, guid: 414d84a92f147164d8f2693e59316892,
+    type: 3}
+  m_PrefabInstance: {fileID: 1618270345}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &190279396 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2181362184469511383, guid: 414d84a92f147164d8f2693e59316892,
+    type: 3}
+  m_PrefabInstance: {fileID: 1618270345}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &190279397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190279395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cffb28b06e849c2489acbe15e02dab5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 265709720}
+  charging_control_weight: 1
+  M_Charge: {fileID: 2100000, guid: d42eb7c92212d154a930361fea6505a8, type: 2}
+  Charge: 100
 --- !u!114 &260414629 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0,
@@ -307,28 +335,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ec5cf00ca181d45a42ba1870e148c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &265709717 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7882473967298476514, guid: 414d84a92f147164d8f2693e59316892,
-    type: 3}
-  m_PrefabInstance: {fileID: 1618270345}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &265709718
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 265709717}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cffb28b06e849c2489acbe15e02dab5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anim: {fileID: 265709720}
-  charging_control_weight: 1
-  M_Charge: {fileID: 2100000, guid: d42eb7c92212d154a930361fea6505a8, type: 2}
-  Charge: 100
 --- !u!95 &265709720 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 2181362182551507151, guid: 414d84a92f147164d8f2693e59316892,
@@ -1884,7 +1890,7 @@ PrefabInstance:
     - target: {fileID: 2181362184469511383, guid: 414d84a92f147164d8f2693e59316892,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2181362184469511383, guid: 414d84a92f147164d8f2693e59316892,
         type: 3}
