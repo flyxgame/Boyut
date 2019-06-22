@@ -7,8 +7,8 @@ using Random = UnityEngine.Random;
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
-    [RequireComponent(typeof (CharacterController))]
-    [RequireComponent(typeof (AudioSource))]
+    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(AudioSource))]
     public class FirstPersonController : MonoBehaviour
     {
         [SerializeField] private bool m_IsWalking;
@@ -43,6 +43,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+        public Animator anim;
+        public float charging_control_weight;
 
         private void Start()
         {
@@ -52,11 +54,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_FovKick.Setup(m_Camera);
             m_HeadBob.Setup(m_Camera, m_StepInterval);
             m_StepCycle = 0f;
-            m_NextStep = m_StepCycle/2f;
+            m_NextStep = m_StepCycle / 2f;
             m_Jumping = false;
-            m_IsCrouching = false;  
+            m_IsCrouching = false;
             m_AudioSource = GetComponent<AudioSource>();
-			m_MouseLook.Init(transform , m_Camera.transform);
+            m_MouseLook.Init(transform, m_Camera.transform);
         }
 
         private void Update()
@@ -68,7 +70,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 StartCoroutine(m_JumpBob.DoBobCycle());
                 m_MoveDir.y = 0f;
-                m_Jumping = false;
             }
             if (!m_CharacterController.isGrounded && !m_Jumping && m_PreviouslyGrounded)
             {
@@ -92,28 +93,27 @@ namespace UnityStandardAssets.Characters.FirstPerson
             float speed;
             GetInput(out speed);
             // always move along the camera forward as it is the direction that it being aimed at
-            Vector3 desiredMove = transform.forward*m_Input.y + transform.right*m_Input.x;
+            Vector3 desiredMove = transform.forward * m_Input.y + transform.right * m_Input.x;
 
             // get a normal for the surface that is being touched to move along it
             RaycastHit hitInfo;
             Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out hitInfo,
-                               m_CharacterController.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
+                               m_CharacterController.height / 2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
-            m_MoveDir.x = desiredMove.x*speed;
-            m_MoveDir.z = desiredMove.z*speed;
+            m_MoveDir.x = desiredMove.x * speed;
+            m_MoveDir.z = desiredMove.z * speed;
 
             if (m_CharacterController.isGrounded)
             {
                 m_MoveDir.y = -m_StickToGroundForce;
-
             }
             else
             {
-                m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
+                m_MoveDir += Physics.gravity * m_GravityMultiplier * Time.fixedDeltaTime;
             }
-            m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
-            
+            m_CollisionFlags = m_CharacterController.Move(m_MoveDir * Time.fixedDeltaTime);
+
             ProgressStepCycle(speed);
             UpdateCameraPosition(speed);
 
@@ -125,8 +125,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             if (m_CharacterController.velocity.sqrMagnitude > 0 && (m_Input.x != 0 || m_Input.y != 0))
             {
-                m_StepCycle += (m_CharacterController.velocity.magnitude + (speed*(m_IsWalking ? 1f : m_RunstepLenghten)))*
+                m_StepCycle += (m_CharacterController.velocity.magnitude + (speed * (m_IsWalking ? 1f : m_RunstepLenghten))) *
                              Time.fixedDeltaTime;
+                //HAREKET EDÝNCE
+                Debug.Log("7");
             }
 
             if (!(m_StepCycle > m_NextStep))
@@ -137,6 +139,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_NextStep = m_StepCycle + m_StepInterval;
 
             PlayFootStepAudio();
+
+            //ATILAN ADIM
         }
 
 
@@ -154,6 +158,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // move picked sound to index 0 so it's not picked next time
             m_FootstepSounds[n] = m_FootstepSounds[0];
             m_FootstepSounds[0] = m_AudioSource.clip;
+
+            //ATILAN ADIM
         }
 
 
@@ -168,9 +174,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_Camera.transform.localPosition =
                     m_HeadBob.DoHeadBob(m_CharacterController.velocity.magnitude +
-                                      (speed*(m_IsWalking ? 1f : m_RunstepLenghten)));
+                                      (speed * (m_IsWalking ? 1f : m_RunstepLenghten)));
                 newCameraPosition = m_Camera.transform.localPosition;
                 newCameraPosition.y = m_Camera.transform.localPosition.y - m_JumpBob.Offset();
+                //HAREKET EDÝNCE
+
             }
             else
             {
@@ -202,6 +210,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (m_Input.sqrMagnitude > 1)
             {
                 m_Input.Normalize();
+                //ÝKÝ HAREKTE TUÞUNA AYNI ANDA BASTIYSAK
             }
 
             // handle speed change to give an fov kick
@@ -210,10 +219,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 StopAllCoroutines();
                 StartCoroutine(!m_IsWalking ? m_FovKick.FOVKickUp() : m_FovKick.FOVKickDown());
+                //KOÞMA TUÞUNA BASTIÐIMIZDA (SHIFT)
             }
 
             m_IsCrouching = Input.GetKey(KeyCode.C);
-
             //crouching 
             if (m_IsCrouching)
             {
@@ -251,7 +260,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private void RotateView()
         {
-            m_MouseLook.LookRotation (transform, m_Camera.transform);
+            m_MouseLook.LookRotation(transform, m_Camera.transform);
         }
 
 
