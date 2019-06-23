@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityStandardAssets.CrossPlatformInput;
 public class BatteryStatus : MonoBehaviour
 {
     [SerializeField]
@@ -11,6 +11,15 @@ public class BatteryStatus : MonoBehaviour
     private float reductionPerSeconds = 0.01f; // bataryanın 1 saniyede azalma miktarı
 
     [SerializeField]
+    private Material chargeMaterial;
+
+    [SerializeField]
+    private Animator animator;
+
+    [SerializeField]
+    private float chargingControlWeight = 1f;
+
+    [SerializeField]
     private bool flashLightIsOn = true; // fener ışığının açık olup olmadığını belirten değişken.
 
     private bool isReducing = false; // pil azalması aktif deaktif 
@@ -18,6 +27,9 @@ public class BatteryStatus : MonoBehaviour
 
     private void Update()
     {
+        ChargeSettings();
+        GetInput();
+
         if (!isReducing && flashLightIsOn) // Azalma aktif ve fener açık ise bataryayı azalt.
         {
             StartCoroutine(ReduceBattery());
@@ -44,6 +56,11 @@ public class BatteryStatus : MonoBehaviour
         return batteryStatus;
     }
 
+    void ChargeSettings()
+    {
+        chargeMaterial.mainTextureOffset = new Vector2(0, 1.5f - (batteryStatus / 10 * 0.05f));
+    }
+
     public void SetBatteryStatus(float value) // Batarya miktarını değiştir.
     {
         batteryStatus = Mathf.Clamp(value, 0, 100);
@@ -58,5 +75,40 @@ public class BatteryStatus : MonoBehaviour
     public void OnFlashLight()
     {
         flashLightIsOn = true;
+    }
+
+    void GetInput()
+    {
+        if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.LeftShift))
+        {
+            animator.SetBool("chr_walk", true);
+
+        }
+        if (Input.GetKeyUp(KeyCode.W) || Input.GetKey(KeyCode.LeftShift))
+        {
+            animator.SetBool("chr_walk", false);
+            animator.SetBool("chr_lookCharge", false);
+        }
+
+        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
+        {
+            animator.SetBool("chr_run", true);
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            animator.SetBool("chr_run", false);
+        }
+        if (Input.GetMouseButton(1) && !Input.GetKey(KeyCode.LeftShift))
+        {
+            if (!animator.GetBool("chr_lookCharge"))
+            {
+                animator.SetLayerWeight(1, chargingControlWeight);
+                animator.SetBool("chr_lookCharge", true);
+            }
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            animator.SetBool("chr_lookCharge", false);
+        }
     }
 }
