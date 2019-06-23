@@ -43,8 +43,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
-        public Animator anim;
-        public float charging_control_weight;
 
         private void Start()
         {
@@ -128,7 +126,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 m_StepCycle += (m_CharacterController.velocity.magnitude + (speed * (m_IsWalking ? 1f : m_RunstepLenghten))) *
                              Time.fixedDeltaTime;
                 //HAREKET EDÝNCE
-                Debug.Log("7");
             }
 
             if (!(m_StepCycle > m_NextStep))
@@ -137,9 +134,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
 
             m_NextStep = m_StepCycle + m_StepInterval;
-
             PlayFootStepAudio();
-
             //ATILAN ADIM
         }
 
